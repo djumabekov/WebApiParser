@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using WebApiParser.Infrastructure.Services;
+using Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -115,6 +116,11 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+builder.Services.AddHangfireServer();
+app.UseHangfireDashboard();
+
+RecurringJob.AddOrUpdate<EmailJob>("email-job", x => x.SendEmailJob(), "* * * * *");
 
 app.MapControllers();
 
