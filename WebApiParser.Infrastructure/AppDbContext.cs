@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using WebApiParser.Domain.Configs;
 using WebApiParser.Domain.Entities;
 using WebApiParser.Domain.Entities.References;
+using WebApiParser.Infrastructure.Configs;
 using WebApiParser.Infrastructure.Configs.References;
 
 namespace WebApiParser.Infrastructure
@@ -16,6 +17,7 @@ namespace WebApiParser.Infrastructure
         public DbSet<ContractEntity> Contracts { get; set; }
         public DbSet<RefContractTypeEntity> RefContractType { get; set; }
         public DbSet<RefContractStatusEntity> RefContractStatus { get; set; }
+        public DbSet<User> Users { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
            : base(options)
@@ -29,6 +31,7 @@ namespace WebApiParser.Infrastructure
             modelBuilder.ApplyConfiguration(new ContractConfig());
             modelBuilder.ApplyConfiguration(new RefContractTypeConfig());
             modelBuilder.ApplyConfiguration(new RefContractStatusConfig());
+            modelBuilder.ApplyConfiguration(new UserConfig());
         }
     }
 }

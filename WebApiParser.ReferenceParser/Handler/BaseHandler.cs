@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Refit;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,10 @@ namespace WebApiParser.ReferenceParser.Handler
                 }
                 catch (Exception exception)
                 {
+                    Log.Debug(exception.Message);
+                    Log.Information(exception.Message);
+                    Log.Warning(exception.Message);
+                    Log.Error(exception.Message);
                     return base.Handle(request);
                 }
             }
@@ -82,6 +87,10 @@ namespace WebApiParser.ReferenceParser.Handler
                 {
                     Console.WriteLine(exception.ToString());
                 }
+                Log.Debug(exception.Message);
+                Log.Information(exception.Message);
+                Log.Warning(exception.Message);
+                Log.Error(exception.Message);
                 return false;
             }
         }

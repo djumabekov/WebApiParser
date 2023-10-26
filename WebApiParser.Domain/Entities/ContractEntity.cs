@@ -28,7 +28,7 @@ namespace WebApiParser.Domain.Entities
 
         public RefContractStatusEntity? RefContractStatus { get; set; }
 
-        public DateTime? CrDate { get; set; }                //crdate - Дата создания
+        public DateTimeOffset? CrDate { get; set; }                //crdate - Дата создания
 
         public double? ContractSum { get; set; }            //contract_sum - Сумма заключенного договора без НДС
 
@@ -42,6 +42,6 @@ namespace WebApiParser.Domain.Entities
 
         public string? CustomerBin { get; set; }            //customer_bin - БИН Заказчика
 
-        public DateTime? IndexDate { get; set; }             //index_date - Дата индексации
+        public DateTimeOffset? IndexDate { get; set; }             //index_date - Дата индексации
     }
 }

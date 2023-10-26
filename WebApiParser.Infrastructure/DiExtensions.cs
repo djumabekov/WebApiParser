@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Refit;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,11 @@ using WebApiParser.Domain.IRepositories.References;
 using WebApiParser.Domain.SeedWork;
 using WebApiParser.Infrastructure.Repositories;
 using WebApiParser.Infrastructure.Repositories.References;
+using WebApiParser.Infrastructure.Services;
+using WebApiParser.ReferenceParser;
+using WebApiParser.ReferenceParser.API;
+using WebApiParser.ReferenceParser.Handler;
+using WebApiParser.ReferenceParser.Mapping;
 
 namespace WebApiParser.Infrastructure
 {
@@ -21,9 +27,9 @@ namespace WebApiParser.Infrastructure
         public static IServiceCollection AddCommonServices(this IServiceCollection services, IConfiguration config)
         {
 
-            //Log.Logger = new LoggerConfiguration()
-            //    .ReadFrom.Configuration(config)
-            //    .CreateLogger();
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(config)
+                .CreateLogger();
 
             services.AddAutoMapper(typeof(ContractMapping).Assembly);
             services.AddAutoMapper(typeof(RefContractTypeMapping).Assembly);
@@ -41,6 +47,9 @@ namespace WebApiParser.Infrastructure
 
             services.AddScoped<IRefContractStatusRepository, RefContractStatusRepository>();
             services.AddScoped<ICrudRepository<RefContractStatusEntity>, RefContractStatusRepository>();
+
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ICrudRepository<User>, UserRepository>();
 
             #endregion
 
@@ -63,14 +72,14 @@ namespace WebApiParser.Infrastructure
             services.AddTransient<ExtractContractHandler>();
             services.AddTransient<ExtractRefContractStatusHandler>();
             services.AddTransient<ExtractRefContractTypeHandler>();
-            //services.AddTransient<PlansValidationHandler<PlanEntity>>();
 
             #endregion
 
             #region Services
 
             services.AddScoped<ReferencesManagerService>();
-
+            services.AddScoped<UserService>();
+            services.AddScoped<IContextService, HttpContextService>();
 
 
             #endregion

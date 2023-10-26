@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebApiParser.Domain.Entities;
 using WebApiParser.Domain.SeedWork;
 
-namespace WebApiParser.Domain.Entities.References
+namespace WebApiParser.Domain.IRepositories
 {
-    public class RefContractTypeEntity : NamedEntity, IAggregateRoot
+    public interface IUserRepository : ICrudRepository<User>
     {
+
     }
+
 }

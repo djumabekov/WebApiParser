@@ -1,0 +1,49 @@
+version: '3.4'
+
+networks:
+  dockerapi-dev:
+    driver: bridge
+
+services:
+  webapiparser.api:
+    image: ${DOCKER_REGISTRY-}webapiparser
+    container_name: WebApiParser
+    build:
+      context: .
+      dockerfile: WebApiParser/Dockerfile
+    environment:
+      ConnectionStrings__DefaultConnection: "host=sql;port=5432;database=WebApiParser;username=postgres;password=password"
+      Logging__LogLevel__Default: "Error"
+    ports:
+      - "5101:80"
+    networks:
+      - dockerapi-dev
+  sql:
+    image: postgres:latest
+    container_name: sql
+    ports:
+      - "5433:5432"
+    restart: always
+    volumes:
+      - webapiparser_db_volume:/var/lib/postrgesql/data
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_DB: "WebApiParser"
+    networks:
+      - dockerapi-dev
+  
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"
+    networks:
+      - dockerapi-dev
+
+volumes:
+  webapiparser_db_volume:

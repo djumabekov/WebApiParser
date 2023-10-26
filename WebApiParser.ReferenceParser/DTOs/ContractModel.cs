@@ -43,7 +43,7 @@ namespace WebApiParser.ReferenceParser.DTOs
 
         public string? index_date { get; set; }             //index_date - Дата индексации
 
-        public long? system_id { get; set; }             //index_date - Дата индексации
+        public long? system_id { get; set; }             
 
     }
 }

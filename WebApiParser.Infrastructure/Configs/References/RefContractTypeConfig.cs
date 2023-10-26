@@ -10,7 +10,7 @@ using WebApiParser.Domain.Entities.References;
 
 namespace WebApiParser.Infrastructure.Configs.References
 {
-    public class RefContractTypeConfig : ReferenceEntityConfig<RefContractTypeEntity>
+    public class RefContractTypeConfig : NamedEntityConfig<RefContractTypeEntity>
     {
         protected override void Config(EntityTypeBuilder<RefContractTypeEntity> builder)
         {

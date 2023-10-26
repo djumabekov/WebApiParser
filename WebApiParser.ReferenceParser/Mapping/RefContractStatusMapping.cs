@@ -15,7 +15,7 @@ namespace WebApiParser.ReferenceParser.Mapping
         public RefContractStatusMapping()
         {
             CreateMap<RefContractStatusModel, RefContractStatusEntity>()
-                .ForMember(x => x.Id, opt => opt.MapFrom(item => item.id))
+                .ForMember(x => x.SystemId, opt => opt.MapFrom(item => item.id))
                 .ForMember(x => x.Code, opt => opt.MapFrom(item => item.code))
                 .ForPath(x => x.Name.Ru, opt => opt.MapFrom(item => item.name_ru))
                 .ForPath(x => x.Name.Kk, opt => opt.MapFrom(item => item.name_kz));
