@@ -83,5 +83,13 @@ namespace WebApiParser.Infrastructure.Services
             return tokenHandler.WriteToken(token);
         }
 
+        public async Task<List<string>> GetUserEmails()
+        {
+            var userRepository = _unitOfWork.GetRepository<User>();
+            var users = await userRepository.GetAsync();
+            var userEmails = users.Select(user => user.Mail).ToList();
+            return userEmails;
+        }
+
     }
 }

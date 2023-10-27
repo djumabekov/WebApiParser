@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using WebApiParser.Infrastructure.Services;
 using Hangfire;
+using WebApiParser.Infrastructure.Handler;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,7 @@ builder.Services.AddDbContext<AppDbContext>(optionsBuilder =>
 
 builder.Services.Configure<ReferenceApiOption>(builder.Configuration.GetSection("ReferencesApi"));
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
+builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("Email"));
 
 
 // Add services to the container.
@@ -117,10 +119,12 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-builder.Services.AddHangfireServer();
 app.UseHangfireDashboard();
+app.UseHangfireServer();
 
-RecurringJob.AddOrUpdate<EmailJob>("email-job", x => x.SendEmailJob(), "* * * * *");
+RecurringJob.AddOrUpdate<EmailJob>("email-job", x => x.SendEmailJob("Hangfire", "Hangfire message"), "* * * * *");
+
+app.UseHangfireDashboard("/hangfire");
 
 app.MapControllers();
 

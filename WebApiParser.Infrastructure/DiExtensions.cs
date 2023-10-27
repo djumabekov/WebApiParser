@@ -19,6 +19,9 @@ using WebApiParser.ReferenceParser;
 using WebApiParser.ReferenceParser.API;
 using WebApiParser.ReferenceParser.Handler;
 using WebApiParser.ReferenceParser.Mapping;
+using Hangfire;
+using Hangfire.PostgreSql;
+
 
 namespace WebApiParser.Infrastructure
 {
@@ -30,6 +33,9 @@ namespace WebApiParser.Infrastructure
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(config)
                 .CreateLogger();
+
+            services.AddHangfire(x => x.UsePostgreSqlStorage(config.GetConnectionString("DefaultConnection")));
+            services.AddHangfireServer();
 
             services.AddAutoMapper(typeof(ContractMapping).Assembly);
             services.AddAutoMapper(typeof(RefContractTypeMapping).Assembly);
@@ -80,6 +86,7 @@ namespace WebApiParser.Infrastructure
             services.AddScoped<ReferencesManagerService>();
             services.AddScoped<UserService>();
             services.AddScoped<IContextService, HttpContextService>();
+            services.AddScoped<IEmailService, EmailService>();
 
 
             #endregion
