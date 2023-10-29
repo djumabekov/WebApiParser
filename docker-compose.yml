@@ -1,9 +1,5 @@
 version: '3.4'
 
-networks:
-  dockerapi-dev:
-    driver: bridge
-
 services:
   webapiparser.api:
     image: ${DOCKER_REGISTRY-}webapiparser
@@ -33,60 +29,44 @@ services:
     networks:
       - dockerapi-dev
 
-  mongodb:
+  mongo:
      image: mongo:4.4
+     container_name: mongo
      networks:
-        - dockerapi-dev
-     volumes:
-      - /mongo_data:/data/db
+      - dockerapi-dev
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
-    volumes:
-      - /es_data:/usr/share/elasticsearch/data
-    environment:
+     image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
+     container_name: elasticsearch
+     environment:
       - http.host=0.0.0.0
       - transport.host=localhost
       - network.host=0.0.0.0
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    mem_limit: 1g
-    networks:
+      - "ES_JAVA_OPTS=-Dlog4j2.formatMsgNoLookups=true -Xms512m -Xmx512m"
+     networks:
       - dockerapi-dev
 
   graylog:
-    image: graylog/graylog:4.2
-    volumes:
-      - /graylog_journal:/usr/share/graylog/data/journal
-    environment:
+     image: graylog/graylog:4.0 
+     container_name: graylog
+     environment:
       - GRAYLOG_PASSWORD_SECRET=somepasswordpepper
-        # Password: admin
-      - GRAYLOG_ROOT_PASSWORD_SHA2=e1b24204830484d635d744e849441b793a6f7e1032ea1eef40747d95d30da592
+        #login: admin, password: admin
+      - GRAYLOG_ROOT_PASSWORD_SHA2=8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
       - GRAYLOG_HTTP_EXTERNAL_URI=http://localhost:9000/
-    entrypoint: /usr/bin/tini -- wait-for-it elasticsearch:9200 --  /docker-entrypoint.sh
-    ports:
-      # Graylog web interface and REST API
+     entrypoint: /usr/bin/tini -- wait-for-it elasticsearch:9200 --  /docker-entrypoint.sh
+     ports:
       - 9000:9000
-      # Syslog TCP
-      - 1514:1514
-      # Syslog UDP
-      - 1514:1514/udp
-      # GELF TCP
       - 12201:12201
-      # GELF UDP
+      - 1514:1514
+      - 1514:1514/udp
       - 12201:12201/udp
-    links:
-      - mongodb:mongo
+     depends_on:
+      - mongo
       - elasticsearch
-    restart: always
-    depends_on:
-      - mongodb
-      - elasticsearch
-    networks:
+     networks:
       - dockerapi-dev
+     restart: always
 
   pgadmin:
     container_name: pgadmin4_container
@@ -101,10 +81,8 @@ services:
       - dockerapi-dev
 
 volumes:
-  mongo_data:
-    driver: local
-  es_data:
-    driver: local
-  graylog_journal:
-    driver: local
   webapiparser_db_volume:
+  
+networks:
+  dockerapi-dev:
+    driver: bridge

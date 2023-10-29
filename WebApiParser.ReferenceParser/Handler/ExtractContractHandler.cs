@@ -24,7 +24,7 @@ namespace WebApiParser.ReferenceParser.Handler
 
         protected override async Task<ApiResult<ContractModel>> ExtractDataFromApi(int after)
         {
-            if (_counter < 1)
+            if (_counter < 20)
             {
                 _counter++;
                 return await _referencesApi.GetContract();
